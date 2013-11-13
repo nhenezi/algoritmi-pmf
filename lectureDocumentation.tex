@@ -1,0 +1,147 @@
+\documentclass[10pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[croatian]{babel}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{algorithm2e} %sudo apt-get install texlive-science
+\usepackage{graphicx} 
+\usepackage{hyperref}
+\usepackage{listings} 
+\usepackage{color}
+
+%--------- CODE SETTINGS--------------------%
+\definecolor{mygreen}{rgb}{0,0.6,0}
+\definecolor{mygray}{rgb}{0.5,0.5,0.5}
+\definecolor{mymauve}{rgb}{0.58,0,0.82}
+
+\lstset{ %
+  backgroundcolor=\color{white},   % choose the background color; you must add \usepackage{color} or \usepackage{xcolor}
+  basicstyle=\footnotesize,        % the size of the fonts that are used for the code
+  breakatwhitespace=false,         % sets if automatic breaks should only happen at whitespace
+  breaklines=true,                 % sets automatic line breaking
+  captionpos=b,                    % sets the caption-position to bottom
+  commentstyle=\color{mygreen},    % comment style
+  deletekeywords={...},            % if you want to delete keywords from the given language
+  escapeinside={\%*}{*)},          % if you want to add LaTeX within your code
+  extendedchars=true,              % lets you use non-ASCII characters; for 8-bits encodings only, does not work with UTF-8
+  frame=single,                    % adds a frame around the code
+  keepspaces=true,                 % keeps spaces in text, useful for keeping indentation of code (possibly needs columns=flexible)
+  keywordstyle=\color{blue},       % keyword style
+  language=C,                      % the language of the code
+  morekeywords={*,...},            % if you want to add more keywords to the set
+  numbers=left,                    % where to put the line-numbers; possible values are (none, left, right)
+  numbersep=5pt,                   % how far the line-numbers are from the code
+  numberstyle=\tiny\color{mygray}, % the style that is used for the line-numbers
+  rulecolor=\color{black},         % if not set, the frame-color may be changed on line-breaks within not-black text (e.g. comments (green here))
+  showspaces=false,                % show spaces everywhere adding particular underscores; it overrides 'showstringspaces'
+  showstringspaces=false,          % underline spaces within strings only
+  showtabs=false,                  % show tabs within strings adding particular underscores
+  stepnumber=2,                    % the step between two line-numbers. If it's 1, each line will be numbered
+  stringstyle=\color{mymauve},     % string literal style
+  tabsize=2,                       % sets default tabsize to 2 spaces
+  title=\lstname                   % show the filename of files included with \lstinputlisting; also try caption instead of title
+}
+
+%----------LOCAL SETTINGS---------------------%
+\newtheorem{definicija}{Definicija}
+\newtheorem{lema}{Lema}
+\newtheorem{teorem}{Teorem}
+\newtheorem{primjer}{Primjer}
+%----------------------------------------------%
+
+\title{Algoritmi}
+%\author{}
+
+\begin{document}
+% ------------title page------------------------%
+\maketitle
+\newpage
+%-----------------------------------------------%
+% Author: Anto Čabraja
+%-----------------------------------------------------------
+\begin{abstract}
+U ovom poglavlju promatramo svojstva algoritama u kojima se koriste 
+generatori slučajnih brojeva kao alat za generiranje poretka ulaznih podataka. 
+Pkazat ćemo nekoliko načina generiranja pseudo-slučajnih brojeva, te rješiti jedan 
+konkretan problem gdje se ovaj tip algoritama koristi.
+\end{abstract}
+\section{Uvod u problem}
+Tvrtka X d.o.o. raspisala je natječaj za radno mjesto asistenta. Na tom položaju već imaju 
+zaposlenu osobu no ta osoba je dobila unaprijeđenje te sada moraju pronaći adekvatnu osobu 
+koja bi ga zamjenila. Pod adekvatna se podrazumjeva da ta nova osoba mora biti boja ili barem 
+jednako dobra kao i dosadađnji asistent u obavljanju svih svojih dužnosti. Olakotna okolnost je 
+ta što ljudi koji rade u ljudskim resursima  su jako dobri i iz intervjua mogu odmah zaključiti 
+da je novi kandidat adekvatan ili ne.
+Kako bi što prije pronašli zamjenu angažirali su agenciju za traženje radnika. 
+Agencija svaki dan šalje jednog kandidata kojeg ljudi iz tvrtke ispitaju i ako je 
+adekvatan odmah bude primljen na posao. Broj kandidta koje će agencija slati je unaprijed 
+određen i za svakog novog kandidata tvrtka mora platiti uslugu agenciji. Cjena te usluge je
+mala ali nije zanemariva. S druge strane ako se tvrtka odluči na zapošljavanje novog kandidata 
+to znači da prijašnjem radniku trebaju dati otkaz ili pronaći trugo radno mjesto što je skupo i novčano i vremenski.
+Problem kojeg naša tvrtka želi rješiti je kako ispitati sve kandidata u svrhu pronalaska najadekvatnijeg 
+ali tako da što manje puta moraju mjenjati trenutnog radnika.\\
+
+\section{Implementacija i složenost} 
+Zapravo tvrtka X d.o.o. ima problem koji se jednostavno može zapisati sljedećim pseudokodom.
+
+\begin{algorithm}[H]
+\caption{Ispitaj sve kandidate}
+najbolji = 0\;
+\While{ agencija salje kandidata i }{
+kvaliteta = IspitajKandidata(i)\;
+\If{ kvaliteta veci od  najbolji}{
+najbolji = kvaliteta\;
+Zaposli(i)\;
+}
+}
+\end{algorithm}
+
+\subsection*{Analiza složenosti:}
+Na početku ćemo predpostaviti da imamo $n$ kandidata. Dakle standardnom analizom složenost našeg 
+problema bi bila $O(n)$. Imamo jednu petlju po svim kandidatima i pri tome biramo najboljeg. 
+Problem je u tome što je cijena funkcije \textit{Zaposli()} velika i složenost našeg algoritma 
+zapravo ovisi ponajviše o toj funkciji.\\
+Označimo sa $t_i$ težinu koju ima funkcija \textit{Ispitajkandidata()}, a da $t_z$ težinu funkcije 
+\textit{Zaposli()}. Sada složenost možemo pisati kao $O(t_in + t_z1m)$ gdje je $m$ zapravo koliko 
+smo puta zadovoljili uvjet to jest zaposlili novog kandidata. Sada vidimo da je $t_in$ fiksan i ne 
+može se izbjeći ali na $t_zm$ možemo pokušati utjecati.
+\subsubsection*{Najgori slučaj}
+Kako smo već vidjeli naša složenost će uvelike ovisiti o veličini $t_zm$. 
+Tako da ćemo u daljnjem razmatranju složenost i izražavati preko tog koeficijenta. Dakle naš problem 
+je složenosti $O(t_zm)=O(m)$. \\
+U najgorem slučaju kada na ulaz u algoritam pristižu kandidati u takvom redosljedu da je svaki sljedeći 
+kandidat bolji od prethodnog, tada je neizbježno svakog kandidata zaposliti i tako dobijemo $m=n$. 
+To zapravo znači da je složenost $O(n)$.
+
+\subsubsection*{Analiza prosječne složenosti}
+Da bi se ispitala prosječna složenost algoritma ovog tipa potrebno bi bilo izračunati složenost za sve 
+moguće ulazne parametre i tek onda bi mogli govoriti o globalnoj prosječnoj složenosti. Ovdje ćemo se 
+baviti vjerojatnosnom analizom kao metodom za traženje prosječne složenosti našeg algoritma. Vjerojatnosne 
+metode se mogu koristiti na specificiranim objektima algoritma koji nam daju najveću težinu. Konkretno u našem 
+slučaju to bi bila funkcija \textit{Zaposli()}. Dakle mi ćemo računati kolika je vjerojatnost da sljedeći kandidat 
+bude zaposlen. Da bi uopće mogli razmatrati bilo što sa nekakvom vjerojatnošću moramo znati ponešto o distribuciji
+ulaznih parametara. Važno je napomenuti da je to uprincipu jako teško i da se u većini slučajeva ne može unaprijed
+znati kakvi su ulazni parametri. No možemo razmotriti problem i vidjeti gdje je razumno predpostaviti da je recimo
+ulaz slučajno generiran, a da to ne utječe na svojstva algoritma. Konkretno u našem razmatranom problemu prirodno
+je reći da kandidati stižu u nekom slučajnom poretku. Što to točno znači za naš problem?
+Predpostavimo da svakom kandidatu odredimo ocjenu tj. da je svaki kandidat reprezentiran nekim brojem. Naš je posao 
+zapravo naći maksimalni element tako da probemo po cjelom polju. Na ulazu nam se nalazi neka permutacija $n$ brojeva. 
+To zapravo znači da ako kažemo da naši kandidati dolaze u slučajnom poretku to znači da je svaka permutacija od njih $n!$ 
+jednako vjerojatna. U tom slučaju govorimo o uniformnoj slučajnoj permutaciji.
+\section{Agoritam sa slučajni brojevima\\ i njegova analiza}
+Algoritmi sa slučajnim faktorm su zapravo algoritmi koji na neki način koriste slučajne brojeve. Neformalna i gruba definicija 
+za randomizirane algoritme bi bila da su to algoritmi čije ponašanje nije određeno samo determinističkim poretkom ulaznih 
+parametara nego utjecaj na ponašanje ima i slučajni faktor.Konkretno slučajni faktor je neki generator slučajnih brojeva. 
+Generatora ima puno, a mi se bavimo onima koji će genrirati uniformne brojeve u nekom intervalu tj svakom broju daju jednaku 
+vjerojatnost pojavljivanja. Takvi algoritmi trebaju permutirati ulazni niz podataka ili nekakav podniz podataka što također 
+ima svoju složenost. Ponekad je ta složenost veća od složenosti samog algoritma.
+
+\section{Složenost algoritma sa slučajnim faktorom}
+
+\section{Generatori slučajnih brojeva}
+
+% End author: Anto Čabraja
+
+
+\end{document}
