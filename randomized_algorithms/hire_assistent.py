@@ -5,9 +5,9 @@ def hire_assistent():
 	best = 0
 	h = 0
 	A = []	
-	n = input()
+	n = int(input())
 	for i in xrange(0,n):
-		A.append( input())
+		A.append( int(input()))
 	for i in xrange(0,n):
 		result = A[i];
 		if result > best:
