@@ -3,6 +3,7 @@
 \usepackage[croatian]{babel}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+\usepackage{amsthm}
 \usepackage{amssymb}
 \usepackage{algorithm2e} %sudo apt-get install texlive-science
 \usepackage{graphicx} 
@@ -65,10 +66,12 @@
 \label{sec:algoritmi_sa_slu_ajnim_faktorom_i_vjerojatnosna_analiza}
 
 \begin{abstract}
-U ovom poglavlju promatramo svojstva algoritama u kojima se koriste 
-generatori slučajnih brojeva kao alat za generiranje poretka ulaznih podataka. 
-Pkazat ćemo nekoliko načina generiranja pseudo-slučajnih brojeva, te rješiti jedan 
-konkretan problem gdje se ovaj tip algoritama koristi.
+U ovom poglavlju pokazat ćemo kako pretpostavke o distribuciji ulaznih podataka mogu pomoći u određivanju
+prosječne složenosti algoritama. Također pokazat ćemo kako se može osigurati da se dobra svojstva distribucije 
+održe te tako uvesti pojam očekivane složenosti. Cjelokupnu analizu ćemo provesti kroz jednostavan problem i 
+pokazati nekoliko algoritama koji služe za generiranje permutacije niza elemenata. Na kraju ćemo se dotaknuti nekih zanimljivih tema iz ovog područja kao što su online modeli algoritama\\
+\textbf{Ključne riječi:} algoritmi, pseudo-slučajni brojevi, vjerojatnosna analiza, karakteristična funkcija, očekivanje, prosječna složenost, očekivana složenost
+,slučajni efekt 
 \end{abstract}
 \subsection{Uvod u problem}
 Tvrtka X d.o.o. raspisala je natječaj za radno mjesto asistenta. Na tom položaju već imaju 
@@ -87,9 +90,10 @@ Problem kojeg naša tvrtka želi rješiti je kako ispitati sve kandidata u svrhu
 ali tako da što manje puta moraju mjenjati trenutnog radnika.\\
 
 \subsection{Implementacija i složenost}
-\subsubsection{Implemetacija} 
-Zapravo tvrtka X d.o.o. ima problem koji se jednostavno može zapisati sljedećim pseudokodom.
 
+\subsubsection{Implemetacija} 
+
+Zapravo tvrtka X d.o.o. ima problem koji se jednostavno može zapisati sljedećim pseudokodom.
 \begin{algorithm}[H]
 \caption{Ispitaj sve kandidate}
 najbolji = 0\;
@@ -143,13 +147,140 @@ Generatora ima puno, a mi se bavimo onima koji će genrirati uniformne brojeve u
 vjerojatnost pojavljivanja. Takvi algoritmi trebaju permutirati ulazni niz podataka ili nekakav podniz podataka što također 
 ima svoju složenost. Ponekad je ta složenost veća od složenosti samog algoritma.
 
-\subsection{Složenost algoritama sa slučajnim faktorom}
+\subsection{Složenost algoritma Ispitaj sve kandidate}
 \subsubsection{Karakteristična funkcija slučajnih varijabli}
+Karakteristična funkcija slučajne varijable je jednostavna metoda za definiranje odnosa između vjerojatnosti i očekivanja.
+\begin{definicija}\label{definija_kfsv}
+Karakterističnu funkciju slučajne varijable $I\{A\}$
+definiramo kao :
+\[ I\{A\} = \left\{ 
+  \begin{array}{l l}
+    1 & \quad \text{ako se A dogodio}\\
+    0 & \quad \text{inače}
+  \end{array} \right.\]
+gdje je $S$ prostor događaja, a $A$ neki događaj u $S$.
+\end{definicija}
+Često umjesto $I\{A\}$ pišemo $X_A$.
+\begin{lema}\label{lema_o_ocekivanju} 
+Neka je $S$ prostor događaja, a $A$ neki događaj u $S$. Tada vrijedi $E[X_A]=P(X)$
+\end{lema}
+\begin{proof}
+Po definiciji karakteristične funkcije slučajne varijable i definiciji očekivanja imamo sljedeće:
+\begin{align*}
+E[X_A] = E[I\{A\}] = 1\cdot P(A) + 0\cdot P(\overline{A}) = P(A) 
+\end{align*}
+Ovdje $\overline{A}$ označava komplement od $A$ u $S$
+\end{proof}
+Prava važnost karakteristične funkcije je kada trebamo izračunati očekivanje pojavljivanja nekog događaja ako neki postupak izvršavamo $n$ puta.
+Kao primjer možemo uzeti bacanje novčića $n$ puta. I recimo da nas zanima koliki je očekivani broj pojavljivanja pisma. Sa $X_i$ označimo karakterističnu funkciju da je
+u itom bacanju palo pismo, a sa $X$ označimo slučajnu varijablu koja predstavlja ukupan broj pisama u $n$ bacanja. očito viijedi sljedeće:
+\begin{align*}
+X = \sum_{i=1}^{n}X_i
+\end{align*}
+Ako želimo izračunati očekivanje od $X$ to nam zapravo znači
+\begin{align*}
+E[X] = E[\sum_{i = 1}^{n}X_i]
+\end{align*}
+Iz leme~\ref{lema_o_ocekivanju} i definicije računanja očekivanja lako dobijemo da je 
+\begin{align*}
+E[X] = E[\sum_{i = 1}^{n}X_i] = \sum_{i = 1}^{n}E[X_i] = \sum_{i = 1}^{n}\frac{1}{2} = \frac{n}{2}
+\end{align*}
+Vidimo da se račun poklapa sa očekivanjem neovisnog bacanja novčića $n$ puta. Ovo bacanje novčića je slučajan događaj.
+
 \subsubsection{Složenost algoritma za problem zapošljavanja}
+Koristeći prethodno pokazani račun pokušat ćemo izračunati očekivani broj osoba koje će trebati zaposliti. To možemo jer smo 
+prije rekli da je logično zaključiti da osobe dolaze u nekom slučajnom poretku i da je vjerojatnost prihvaćanja za svaku osobu ista.
+Označimo sa $X$ slučajnu varijablu koja označava koliko puta smo zaposlili novog kandidata. Naravno sada možemo izračunati očekivanje od $X$
+\begin{align*}
+E[X] = \sum_{x=1}^{n}xP(X=x)
+\end{align*}
+No ovakav račun često zna biti težak za računanje pa ćemo stoga iskoriti alat koji smo definirali u prethodnoj cjelini.\\
+Označimo sa $X_i$ događaj da li je prihvaćen $i-ti$ kandidat.
+\begin{align*}
+X_i = I\{\text{i-ti kandidat je prihvaćen}\}\\
+X_i = \left\{ 
+  \begin{array}{l l}
+    1 & \quad \text{i-ti kandidat prihvaćen}\\
+    0 & \quad \text{inače}
+  \end{array} \right.
+\end{align*}
+Iz ovoga imamo da je $X = X_1 + X_2 + \cdots + X_n$\\
+Iz leme~\ref{lema_o_ocekivanju} znamo da vrijedi $E[X_i] = P\{\text{kandidat i je prihvaćen}\}$.
+Vjerojatnost da je $i-ti$ kandidat prihvaćen je situacija kada je on bolji od njih $i-1$, a kako svi imaju istu vjerojatnost prihavčanja slijedi da je
+\\$P\{\text{kandidat i je prihvaćen}\}=1/i$. To znači da je $E[X_i] = 1/i$. Sada možemo izračunati $E[X]$.
+\begin{align*}
+E[X] = E[\sum_{i = 1}^{n}X_i] = \sum_{i = 1}^{n}E[X_i] = \sum_{i = 1}^{n}1/i = \ln(n) + O(1)
+\end{align*}
+Zadnji korak slijedi iz ocjene sume integralom.
+Prethodnim računom smo dokazali sljedeću korisnu lemu.
+\begin{lema}\label{slozenost_rand_alg}
+Neka imamo n podataka i neka su oni u slučajnom poretku tada je prosječna složenost algoritma Ispitaj sve kandidate O($\ln(t_zn)$)  
+\end{lema}
+Konkretno ovim smo pokazali da je $m = \ln(n)$\\
+Naravno ova lema se može poopćiti i na sve ostale slučajeve u kojima imamo situaciju da ulazni podatak prihvaćamo uz neke uvjete. 
+Još jednom napominjemo da dobro treba proučiti ulazne podatke i vidjeti da li imaju neku poželjnu distribuciju koja će nam omogućiti ovakvu analizu prosječne složenosti.
+\subsection{Algoritmi sa utjecajem slučajnih faktora}
+U pethodnoj cjelini smo morali znati ponešto o distribuciji ulaznih podataka. Ovdje se pitamo da li je moguće permutirati ulazne podatke tako da 
+dobijemo željenu distribuciju. Dakle zamislimo da u našem algoritmu Izaberi najboljeg kandidata znamo listu unaprijed i mi biramo kojeg ćemo kandidata pozvati sljedećeg.
+Ako to predstavimo u terminima pseudo-algoritma onda naš algoritam izgleda ovako:
+\begin{center}
+\begin{algorithm}[H]
+\caption{Randomizirani ispitaj sve kandidate}
+Permuturaj ulazni vektor\;
+najbolji = 0\;
+\While{ uzmi sljedeceg po redu}{
+kvaliteta = IspitajKandidata(i)\;
+\If{ kvaliteta veca od  najbolji}{
+najbolji = kvaliteta\;
+Zaposli(i)\;
+}
+}
+\end{algorithm}
+\end{center}
+Za ovaj algoritam također vrijedi da je složenost $O(t_zn)$ gdje je $n$ broj kandidata.\\
+U čemu je onda zapravo razlika? Razlika je u tome što smo u prethodnoj cjelini govorili o prosječnoj složenosti, a ovdje želimo dobiti očekivanu složenost.
+Prosječna složenost nam je dala mogućnost da algoritam poboljšamo, ona nam kaže da postoji mogućnost poboljšanja ali ne i kako. Ako gledamo da su sve permutacije 
+na ulazu jednako vjerojatne onda je jednako vjerojatno da se naš algoritam izvši brzo ili sporo. No ako mi utječemo na ulaze podatke da budu u što uniformnijoj slučajnoj
+distribuciji onda možemo očekivati da će se naš problem ponašati kao u prosječnoj složenosto. Željenu permutaciju možemo ostvariti nekim od algoritama za generiranje slučajnih nizova. To su algoritmi koji ulazni niz podataka permutiraju u neki slučajni poredak.
+U ovom radu ćemo obraditi dva takva algoritma.\\
+Prije nego uvedenom algoritme potrebno je objasniti dvije funkcije koje ćemo koristit. Radi se o funkciji RANDOM(a,b) i SORT(A,B). RANDOM() vraća jedan broj između a i b i to tako da je vjerojatnost vraćanja bilo kojeg broja jednaka(uniformna distribucija). Složenost ove funkcije je $O(1)$. SORT(A,B) sortira niz A tako da koristi elemente iz niza B kao vrijednosti po kojima sortira A. Složenost ove funkcije je ovisna o vrsti sortiranja što ćemo upoznati u narednim izlaganjima, ali pretpostavimo najgore a to je $O(n^2)$.Sada možemo napisati i analizirati algoritme algoritme
 
-\subsection{Generatori slučajnih brojeva}
 
+\begin{algorithm}[H]
+\caption{Permutiraj po sortiranom}
+n = A.size(); // A ulazni niz\;
+P[] = new array()\;
+\For {i = 1:n}{
+  P[i]=RANDOM(1,$n^3$)
+}
+SORT(A,P);
+\end{algorithm}
+
+Ovaj algoritam radi tako da kreiramo polje slučajnih brojeva i da onda ulazni niz elemenata sortiramo koristeći to slučajno generirano polje. Ovdje je složenost velika
+s obzirom da moramo raditi sortiranje koje je prosjećne složenosti $O(n\lg(n))$.
+Ostaje samo provjeriti da li je ovaj algoritam korektan za naše potrebe. A to znači da li generira uniformnu permutaciju brojeva.
+\begin{lema}
+Agoritam permutiraj po sortiranom vraća uniformnu permutaciju ulaznih podataka
+\end{lema}
+\begin{proof}
+Dokaz se može pogledati u knjizi Introduction to algorithms 3th edition, str.125-126
+\end{proof}
+
+\begin{algorithm}[H]
+\caption{Automatsko pridruzivanje}
+n = A.size(); // A ulazni niz\;
+\For {i = 1:n}{
+  A[i]=A[RANDOM(i,$n$)]
+}
+\end{algorithm}
+Ovaj algoritam je puno brži nego prethodni i ima linearnu složenost. Radi tako da elementu $i$ pridružuje neki element iz ostatka polja. On ne generira sve moguće permutacije ali računa uniformnu slučajnu permutaciju.
+\begin{lema}
+Algoritam Automatsko pridruživanje računa uniformnu slučajnu permutaciju.
+\end{lema}
+\begin{proof}
+Dokaz se može pogledati u knjizi Introduction to algorithms 3th edition, str.127
+\end{proof}
 % End author: Anto Čabraja
-
+\subsection{Zanimljivosti}
 
 \end{document}
