@@ -56,6 +56,7 @@
 \begin{document}
 % ------------title page------------------------%
 \maketitle
+\tableofcontents
 \newpage
 %-----------------------------------------------%
 % Author: Anto Čabraja
@@ -85,7 +86,8 @@ to znači da prijašnjem radniku trebaju dati otkaz ili pronaći trugo radno mje
 Problem kojeg naša tvrtka želi rješiti je kako ispitati sve kandidata u svrhu pronalaska najadekvatnijeg 
 ali tako da što manje puta moraju mjenjati trenutnog radnika.\\
 
-\subsection{Implementacija i složenost} 
+\subsection{Implementacija i složenost}
+\subsubsection{Implemetacija} 
 Zapravo tvrtka X d.o.o. ima problem koji se jednostavno može zapisati sljedećim pseudokodom.
 
 \begin{algorithm}[H]
@@ -100,7 +102,7 @@ Zaposli(i)\;
 }
 \end{algorithm}
 
-\subsection*{Analiza složenosti:}
+\subsubsection{Analiza složenosti}
 Na početku ćemo predpostaviti da imamo $n$ kandidata. Dakle standardnom analizom složenost našeg 
 problema bi bila $O(n)$. Imamo jednu petlju po svim kandidatima i pri tome biramo najboljeg. 
 Problem je u tome što je cijena funkcije \textit{Zaposli()} velika i složenost našeg algoritma 
@@ -117,7 +119,7 @@ U najgorem slučaju kada na ulaz u algoritam pristižu kandidati u takvom redosl
 kandidat bolji od prethodnog, tada je neizbježno svakog kandidata zaposliti i tako dobijemo $m=n$. 
 To zapravo znači da je složenost $O(n)$.
 
-\subsubsection*{Analiza prosječne složenosti}
+\subsubsection*{Prosječne složenosti}
 Da bi se ispitala prosječna složenost algoritma ovog tipa potrebno bi bilo izračunati složenost za sve 
 moguće ulazne parametre i tek onda bi mogli govoriti o globalnoj prosječnoj složenosti. Ovdje ćemo se 
 baviti vjerojatnosnom analizom kao metodom za traženje prosječne složenosti našeg algoritma. Vjerojatnosne 
@@ -132,7 +134,8 @@ Predpostavimo da svakom kandidatu odredimo ocjenu tj. da je svaki kandidat repre
 zapravo naći maksimalni element tako da probemo po cjelom polju. Na ulazu nam se nalazi neka permutacija $n$ brojeva. 
 To zapravo znači da ako kažemo da naši kandidati dolaze u slučajnom poretku to znači da je svaka permutacija od njih $n!$ 
 jednako vjerojatna. U tom slučaju govorimo o uniformnoj slučajnoj permutaciji.
-\subsection{Agoritam sa slučajni brojevima\\ i njegova analiza}
+
+\subsection{Utjecaj slučajnih faktora u algoritmima}
 Algoritmi sa slučajnim faktorm su zapravo algoritmi koji na neki način koriste slučajne brojeve. Neformalna i gruba definicija 
 za randomizirane algoritme bi bila da su to algoritmi čije ponašanje nije određeno samo determinističkim poretkom ulaznih 
 parametara nego utjecaj na ponašanje ima i slučajni faktor.Konkretno slučajni faktor je neki generator slučajnih brojeva. 
@@ -140,7 +143,9 @@ Generatora ima puno, a mi se bavimo onima koji će genrirati uniformne brojeve u
 vjerojatnost pojavljivanja. Takvi algoritmi trebaju permutirati ulazni niz podataka ili nekakav podniz podataka što također 
 ima svoju složenost. Ponekad je ta složenost veća od složenosti samog algoritma.
 
-\subsection{Složenost algoritma sa slučajnim faktorom}
+\subsection{Složenost algoritama sa slučajnim faktorom}
+\subsubsection{Karakteristična funkcija slučajnih varijabli}
+\subsubsection{Složenost algoritma za problem zapošljavanja}
 
 \subsection{Generatori slučajnih brojeva}
 
