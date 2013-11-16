@@ -60,13 +60,16 @@
 %-----------------------------------------------%
 % Author: Anto Čabraja
 %-----------------------------------------------------------
+\section{Algoritmi sa slučajnim faktorom i vjerojatnosna analiza} % (fold)
+\label{sec:algoritmi_sa_slu_ajnim_faktorom_i_vjerojatnosna_analiza}
+
 \begin{abstract}
 U ovom poglavlju promatramo svojstva algoritama u kojima se koriste 
 generatori slučajnih brojeva kao alat za generiranje poretka ulaznih podataka. 
 Pkazat ćemo nekoliko načina generiranja pseudo-slučajnih brojeva, te rješiti jedan 
 konkretan problem gdje se ovaj tip algoritama koristi.
 \end{abstract}
-\section{Uvod u problem}
+\subsection{Uvod u problem}
 Tvrtka X d.o.o. raspisala je natječaj za radno mjesto asistenta. Na tom položaju već imaju 
 zaposlenu osobu no ta osoba je dobila unaprijeđenje te sada moraju pronaći adekvatnu osobu 
 koja bi ga zamjenila. Pod adekvatna se podrazumjeva da ta nova osoba mora biti boja ili barem 
@@ -76,13 +79,13 @@ da je novi kandidat adekvatan ili ne.
 Kako bi što prije pronašli zamjenu angažirali su agenciju za traženje radnika. 
 Agencija svaki dan šalje jednog kandidata kojeg ljudi iz tvrtke ispitaju i ako je 
 adekvatan odmah bude primljen na posao. Broj kandidta koje će agencija slati je unaprijed 
-određen i za svakog novog kandidata tvrtka mora platiti uslugu agenciji. Cjena te usluge je
+određen i za svakog novog kandidata tvrtka mora platiti uslugu agenciji. cijena te usluge je
 mala ali nije zanemariva. S druge strane ako se tvrtka odluči na zapošljavanje novog kandidata 
 to znači da prijašnjem radniku trebaju dati otkaz ili pronaći trugo radno mjesto što je skupo i novčano i vremenski.
 Problem kojeg naša tvrtka želi rješiti je kako ispitati sve kandidata u svrhu pronalaska najadekvatnijeg 
 ali tako da što manje puta moraju mjenjati trenutnog radnika.\\
 
-\section{Implementacija i složenost} 
+\subsection{Implementacija i složenost} 
 Zapravo tvrtka X d.o.o. ima problem koji se jednostavno može zapisati sljedećim pseudokodom.
 
 \begin{algorithm}[H]
@@ -129,7 +132,7 @@ Predpostavimo da svakom kandidatu odredimo ocjenu tj. da je svaki kandidat repre
 zapravo naći maksimalni element tako da probemo po cjelom polju. Na ulazu nam se nalazi neka permutacija $n$ brojeva. 
 To zapravo znači da ako kažemo da naši kandidati dolaze u slučajnom poretku to znači da je svaka permutacija od njih $n!$ 
 jednako vjerojatna. U tom slučaju govorimo o uniformnoj slučajnoj permutaciji.
-\section{Agoritam sa slučajni brojevima\\ i njegova analiza}
+\subsection{Agoritam sa slučajni brojevima\\ i njegova analiza}
 Algoritmi sa slučajnim faktorm su zapravo algoritmi koji na neki način koriste slučajne brojeve. Neformalna i gruba definicija 
 za randomizirane algoritme bi bila da su to algoritmi čije ponašanje nije određeno samo determinističkim poretkom ulaznih 
 parametara nego utjecaj na ponašanje ima i slučajni faktor.Konkretno slučajni faktor je neki generator slučajnih brojeva. 
@@ -137,9 +140,9 @@ Generatora ima puno, a mi se bavimo onima koji će genrirati uniformne brojeve u
 vjerojatnost pojavljivanja. Takvi algoritmi trebaju permutirati ulazni niz podataka ili nekakav podniz podataka što također 
 ima svoju složenost. Ponekad je ta složenost veća od složenosti samog algoritma.
 
-\section{Složenost algoritma sa slučajnim faktorom}
+\subsection{Složenost algoritma sa slučajnim faktorom}
 
-\section{Generatori slučajnih brojeva}
+\subsection{Generatori slučajnih brojeva}
 
 % End author: Anto Čabraja
 
