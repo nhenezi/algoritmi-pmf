@@ -37,7 +37,7 @@ def max_heap(arr):
     max_heapify(arr, i)
 
 def heapsort(arr):
-  '''HEAPSORT MAGIC!'''
+  '''HEAPSORT MAGIC!!'''
   max_heap(arr)
   left = len(arr)
   for i in reversed(xrange(len(arr))):
