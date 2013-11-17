@@ -1,4 +1,4 @@
-qs :: [Int] -> [Int]
+qs :: (Ord a) => [a] -> [a]
 qs [] = []
 qs (x:xs) = filter (<x) xs ++ [x] ++ filter (>x) xs
 
